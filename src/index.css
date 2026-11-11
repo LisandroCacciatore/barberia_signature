@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-primary font-sans antialiased;
+  }
+}
+
+@layer components {
+  /* Chrome/Titanium button */
+  .btn-chrome {
+    background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 50%, #cbd5e1 100%);
+    color: #0b0c0e;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+  .btn-chrome:hover {
+    background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 50%, #e2e8f0 100%);
+    box-shadow: 0 4px 16px rgba(241,245,249,0.15), inset 0 1px 0 rgba(255,255,255,0.2);
+    transform: translateY(-1px);
+  }
+  .btn-chrome:active {
+    transform: translateY(0);
+  }
+}
+
+/* Geist font via system stack fallback */
+@font-face {
+  font-family: 'Geist';
+  src: local('Geist'), local('Inter'), local('system-ui');
+}

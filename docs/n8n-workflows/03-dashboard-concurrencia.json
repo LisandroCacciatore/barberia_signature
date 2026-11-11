@@ -1,0 +1,57 @@
+{
+  "name": "03 - Dashboard Concurrencia",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": { "interval": [{ "field": "days", "daysInterval": 1, "triggerAtHour": 6 }] }
+      },
+      "name": "Cron Diario 6am",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://api.fresha.com/v1/appointments?date={{ $now.toISODate() }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "name": "Fetch Fresha",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Calcula métricas de concurrencia por barbero\ntry {\n  const data = $input.all()[0].json;\n  const appointments = Array.isArray(data) ? data : (data.data || []);\n  const byBarber = {};\n  appointments.forEach(a => {\n    const barber = a.barber_name || a.staff_name || 'sin_asignar';\n    if (!byBarber[barber]) byBarber[barber] = { total: 0, confirmed: 0, no_show: 0, revenue: 0 };\n    byBarber[barber].total += 1;\n    if (a.status === 'confirmed') byBarber[barber].confirmed += 1;\n    if (a.status === 'no_show') byBarber[barber].no_show += 1;\n    byBarber[barber].revenue += (a.price || 0);\n  });\n  return Object.entries(byBarber).map(([barber, m]) => ({ json: { barber, date: $now.toISODate(), ...m } }));\n} catch (e) {\n  return [{ json: { error: e.message, date: $now.toISODate() } }];\n}"
+      },
+      "name": "Calcular Métricas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [700, 300]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": { "__rl": true, "value": "PEGA_TU_SPREADSHEET_ID" },
+        "sheetName": { "__rl": true, "value": "Dashboard" },
+        "columns": { "mappingMode": "autoMapInputData", "value": {} }
+      },
+      "name": "Append Dashboard",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [950, 300]
+    }
+  ],
+  "connections": {
+    "Cron Diario 6am": { "main": [[{ "node": "Fetch Fresha", "type": "main", "index": 0 }]] },
+    "Fetch Fresha": { "main": [[{ "node": "Calcular Métricas", "type": "main", "index": 0 }]] },
+    "Calcular Métricas": { "main": [[{ "node": "Append Dashboard", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "active": false,
+  "_credentials_needed": {
+    "httpHeaderAuth": "headerAuth (Fresha API key)",
+    "googleSheets": "googleSheetsOAuth2Api"
+  }
+}

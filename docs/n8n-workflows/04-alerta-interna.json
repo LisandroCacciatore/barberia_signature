@@ -1,0 +1,63 @@
+{
+  "name": "04 - Alerta Interna Lead",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-alert",
+        "options": {}
+      },
+      "name": "Webhook Lead",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 300],
+      "webhookId": "lead-alert"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://slack.com/api/chat.postMessage",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ channel: '#leads-signature', text: '🚨 Nuevo lead: ' + $json.nombre + ' (' + $json.telefono + ') - Servicio: ' + ($json.servicio || 'no especificado') }) }}",
+        "options": {}
+      },
+      "name": "Notif Slack",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 200]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@signature-salon.com",
+        "toEmail": "equipo@signature-salon.com",
+        "subject": "🚨 Lead nuevo: {{ $json.nombre }}",
+        "emailType": "html",
+        "message": "=Lead nuevo recibido.<br><br><b>{{ $json.nombre }}</b><br>{{ $json.telefono }}<br>{{ $json.email }}<br><br>Servicio: {{ $json.servicio }}<br>Origen: {{ $json.pagina_origen }}",
+        "options": {}
+      },
+      "name": "Notif Email Equipo",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [500, 400]
+    }
+  ],
+  "connections": {
+    "Webhook Lead": {
+      "main": [
+        [
+          { "node": "Notif Slack", "type": "main", "index": 0 },
+          { "node": "Notif Email Equipo", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": { "executionOrder": "v1" },
+  "active": false,
+  "_credentials_needed": {
+    "httpHeaderAuth": "headerAuth (Slack OAuth)",
+    "emailSend": "smtp"
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "name": "01 - Captura Lead Signature",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-signature",
+        "responseMode": "responseNode"
+      },
+      "name": "Webhook Lead",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 300],
+      "webhookId": "lead-signature"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"ok\", \"message\": \"Lead recibido\" } }}"
+      },
+      "name": "Respond 200",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [500, 200]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": { "__rl": true, "value": "PEGA_TU_SPREADSHEET_ID" },
+        "sheetName": { "__rl": true, "value": "Leads" },
+        "columns": { "mappingMode": "autoMapInputData", "value": {} }
+      },
+      "name": "Append Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [500, 400]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@signature-salon.com",
+        "toEmail": "salon@signature-salon.com",
+        "subject": "=Nuevo lead: {{ $json.nombre }}",
+        "emailType": "html",
+        "message": "=Lead recibido desde {{ $json.pagina_origen }}<br><br><b>Nombre:</b> {{ $json.nombre }}<br><b>Email:</b> {{ $json.email }}<br><b>Tel:</b> {{ $json.telefono }}<br><b>Servicio:</b> {{ $json.servicio }}<br><b>Fecha preferida:</b> {{ $json.fecha_preferida }}<br><b>Mensaje:</b> {{ $json.mensaje }}<br><br><b>UTM:</b> {{ $json.utm_source }} / {{ $json.utm_medium }} / {{ $json.utm_campaign }}<br><b>Timestamp:</b> {{ $json.timestamp }}",
+        "options": {}
+      },
+      "name": "Email Salon",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [800, 350]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@signature-salon.com",
+        "toEmail": "={{ $json.email }}",
+        "subject": "Recibimos tu consulta - Signature Salón Masculino",
+        "emailType": "html",
+        "message": "=Hola {{ $json.nombre }},<br><br>Recibimos tu consulta y un coordinador te contactará dentro del día hábil.<br><br>Si querés adelantar tu turno, escribinos por WhatsApp: <a href=\"https://wa.me/5493415558921\">+54 9 341 555-8921</a>.<br><br>Signature Salón Masculino<br>Pichincha Bis 176, Rosario",
+        "options": {}
+      },
+      "name": "Email Lead",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [800, 500]
+    }
+  ],
+  "connections": {
+    "Webhook Lead": {
+      "main": [
+        [
+          { "node": "Respond 200", "type": "main", "index": 0 },
+          { "node": "Append Sheet", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Append Sheet": {
+      "main": [
+        [
+          { "node": "Email Salon", "type": "main", "index": 0 },
+          { "node": "Email Lead", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": { "executionOrder": "v1" },
+  "active": false,
+  "_credentials_needed": {
+    "googleSheets": "googleSheetsOAuth2Api",
+    "emailSend": "smtp"
+  }
+}

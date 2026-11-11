@@ -1,0 +1,74 @@
+{
+  "name": "02 - Reactivación Clientes",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": { "interval": [{ "field": "weeks", "weeksInterval": 1 }] }
+      },
+      "name": "Cron Semanal",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": { "__rl": true, "value": "PEGA_TU_SPREADSHEET_ID" },
+        "sheetName": { "__rl": true, "value": "Leads" }
+      },
+      "name": "Read Leads",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.timestamp }}",
+              "rightValue": "={{ new Date(Date.now() - 30*24*60*60*1000).toISOString() }}",
+              "operator": { "type": "dateTime", "operation": "after" }
+            },
+            {
+              "leftValue": "={{ $json.estado }}",
+              "rightValue": "reservado",
+              "operator": { "type": "string", "operation": "notEquals" }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "name": "Filtrar Sin Reserva 30d",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [700, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@signature-salon.com",
+        "toEmail": "={{ $json.email }}",
+        "subject": "Tu estilo te espera - Signature Salón Masculino",
+        "emailType": "html",
+        "message": "=Hola {{ $json.nombre }},<br><br>Hace un tiempo no te vemos por Pichincha. Reservá tu turno con un 15% off exclusivo para clientes que vuelven:<br><br><a href=\"https://signature-salon.com/reserva\">Reservar ahora →</a><br><br>Signature Salón Masculino",
+        "options": {}
+      },
+      "name": "Email Reactivación",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [950, 300]
+    }
+  ],
+  "connections": {
+    "Cron Semanal": { "main": [[{ "node": "Read Leads", "type": "main", "index": 0 }]] },
+    "Read Leads": { "main": [[{ "node": "Filtrar Sin Reserva 30d", "type": "main", "index": 0 }]] },
+    "Filtrar Sin Reserva 30d": { "main": [[{ "node": "Email Reactivación", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "active": false,
+  "_credentials_needed": {
+    "googleSheets": "googleSheetsOAuth2Api",
+    "emailSend": "smtp"
+  }
+}
