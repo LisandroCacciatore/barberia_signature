@@ -23,3 +23,4 @@ Los workflows están creados con `"active": false`. Enciéndelos una vez que las
 ## Endpoints que consume el frontend
 - **Leads**: `POST /webhook/lead-signature` → workflow 01
 - **Alertas internas** (opcional): `POST /webhook/lead-alert` → workflow 04
+

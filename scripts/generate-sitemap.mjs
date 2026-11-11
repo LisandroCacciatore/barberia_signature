@@ -48,3 +48,4 @@ ${allPages
 const outputPath = path.join(__dirname, '../public/sitemap.xml');
 fs.writeFileSync(outputPath, sitemap, 'utf8');
 console.log(`✅ sitemap.xml generado con ${allPages.length} URLs en public/sitemap.xml`);
+
