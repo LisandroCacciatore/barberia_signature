@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { hero, metrics = [] } from '../data/hero.js'; // Valor por defecto por si falla
+import { hero, metrics } from '../data/hero.js'; // Valor por defecto por si falla
 
 const barberAvatars = [
   'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=80&q=80',
