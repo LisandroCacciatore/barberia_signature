@@ -66,7 +66,12 @@ export default function Hero() {
                 <span className="text-label-sm text-secondary">Fresha</span>
               </div>
 
-              <div className="absolute bottom-4 left-4 right-4 p-4 rounded-xl bg-background/85 backdrop-blur-md border border-outline-variant shadow-xl flex items-center justify-between">
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=Pichincha+Bis+176+Alberto+Olmedo+Rosario"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute bottom-4 left-4 right-4 p-4 rounded-xl bg-background/85 backdrop-blur-md border border-outline-variant shadow-xl flex items-center justify-between hover:border-primary transition-colors"
+              >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-primary text-background flex items-center justify-center">
                     <span className="material-symbols-outlined text-[20px]">content_cut</span>
@@ -77,11 +82,11 @@ export default function Hero() {
                   </div>
                 </div>
                 <span className="material-symbols-outlined text-primary text-[20px]">verified</span>
-              </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
     </section>
   );
 }
