@@ -1,46 +1,67 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import Seo from '../components/Seo.jsx';
 import BlogCard from '../components/BlogCard.jsx';
-import { blogPosts, blogCategories, getFeaturedPost } from '../data/blog.js';
+import { blogCategories, getPostsByCategory, getFeaturedPost } from '../data/blog.js';
 import { formatDate } from '../utils/formatDate.js';
 
 export default function BlogIndex() {
-  const [category, setCategory] = useState('Todos');
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [activeCategory, setActiveCategory] = useState('all');
 
-  const filtered =
-    category === 'Todos'
-      ? blogPosts
-      : blogPosts.filter((p) => p.category === category);
+  useEffect(() => {
+    const hash = location.hash.replace('#', '').toLowerCase();
+    const validCategories = blogCategories.map((c) => c.id);
+    if (hash && validCategories.includes(hash)) {
+      setActiveCategory(hash);
+    }
+  }, [location.hash]);
 
-  const featured = getFeaturedPost();
+  const posts = useMemo(() => {
+    const filtered = getPostsByCategory(activeCategory);
+    return [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date));
+  }, [activeCategory]);
+
+  const featured = activeCategory === 'all' ? getFeaturedPost() : null;
+  const others = featured ? posts.filter((p) => p.slug !== featured.slug) : posts;
 
   return (
-    <div className="bg-background min-h-screen pt-16">
-      <Seo
-        title="Blog"
-        description="Consejos de grooming, estilo masculino, productos y cultura de barbería. El blog de Signature Salón Masculino."
-        path="/blog"
-      />
+    <div className="bg-background min-h-screen">
+      <Seo title="Blog" description="Artículos de visagismo, dermocosmética y estilo masculino." path="/blog" />
 
-      {/* Featured article */}
+      <section className="relative w-full bg-surface-container-lowest border-b border-outline-variant py-16">
+        <div className="max-w-7xl mx-auto px-margin-mobile lg:px-margin">
+          <div className="max-w-3xl">
+            <h1 className="font-display text-4xl lg:text-5xl text-primary uppercase font-light tracking-wider leading-tight">
+              Estilo & Cultura Masculina
+            </h1>
+            <p className="text-body-lg text-secondary mt-4 max-w-2xl">
+              Artículos de visagismo morfopsicológico, arquitectura capilar, dermocosmética y la vida en Pichincha, Rosario.
+            </p>
+          </div>
+
+          <div className="mt-8 flex items-center gap-2 overflow-x-auto pb-2">
+            {blogCategories.map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => { setActiveCategory(cat.id); navigate(cat.id === 'all' ? '/blog' : `/blog#${cat.id}`, { replace: true }); }}
+                className={`px-4 py-1.5 rounded-full font-label-md uppercase tracking-wider whitespace-nowrap transition-all border ${activeCategory === cat.id ? 'bg-primary text-background border-primary font-bold' : 'bg-surface-container border-outline-variant text-secondary hover:text-primary'}`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {featured && (
         <section className="w-full py-12 bg-background">
           <div className="max-w-7xl mx-auto px-margin-mobile lg:px-margin">
             <article className="grid grid-cols-1 lg:grid-cols-12 rounded-2xl overflow-hidden bg-surface-container-low border border-outline-variant shadow-xl group">
               <div className="lg:col-span-7 relative h-80 lg:h-auto bg-surface-container overflow-hidden">
-                {featured.image ? (
-                  <img
-                    src={featured.image}
-                    alt={featured.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-label-sm text-secondary uppercase tracking-wider">
-                    {featured.categoryLabel}
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-surface-container-low/80 pointer-events-none" />
+                <img src={featured.image} alt={featured.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               </div>
               <div className="lg:col-span-5 p-8 flex flex-col justify-between">
                 <div>
@@ -49,16 +70,12 @@ export default function BlogIndex() {
                     <span>•</span>
                     <time dateTime={featured.date}>{formatDate(featured.date)}</time>
                   </div>
-                  <h2 className="font-display text-2xl text-primary uppercase font-bold leading-tight mb-4 group-hover:text-secondary transition-colors">
-                    {featured.title}
-                  </h2>
-                  <p className="text-body-md text-secondary leading-relaxed mb-6">{featured.excerpt}</p>
+                  <h2 className="font-display text-2xl text-primary uppercase font-bold leading-tight mb-4">{featured.title}</h2>
+                  <p className="text-body-md text-secondary leading-relaxed mb-6 line-clamp-4">{featured.excerpt}</p>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-body-sm text-primary">{featured.author}</span>
-                  <Link to={`/blog/${featured.slug}`} className="px-4 py-2 btn-chrome font-label-md uppercase tracking-wider rounded-lg">
-                    Leer artículo
-                  </Link>
+                  <span className="text-body-sm text-primary font-semibold">{featured.author}</span>
+                  <Link to={`/blog/${featured.slug}`} className="px-4 py-2 btn-chrome font-label-md uppercase tracking-wider rounded-lg">Leer artículo</Link>
                 </div>
               </div>
             </article>
@@ -66,53 +83,11 @@ export default function BlogIndex() {
         </section>
       )}
 
-      {/* Header */}
-      <section className="w-full py-16 border-b border-outline-variant">
+      <section className="w-full py-12 bg-background">
         <div className="max-w-7xl mx-auto px-margin-mobile lg:px-margin">
-          <span className="text-label-sm text-secondary uppercase tracking-[0.2em]">Grooming &amp; Estilo</span>
-          <h1 className="font-display text-4xl lg:text-5xl text-primary uppercase font-light mt-3 mb-4">
-            Blog
-          </h1>
-          <p className="text-body-md text-secondary max-w-lg">
-            Todo lo que necesitás saber sobre cortes, barba, productos y el mundo del grooming masculino.
-          </p>
-        </div>
-      </section>
-
-      {/* Filter bar */}
-      <section className="w-full py-6 border-b border-outline-variant">
-        <div className="max-w-7xl mx-auto px-margin-mobile lg:px-margin">
-          <div className="flex flex-wrap gap-2">
-            {blogCategories.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setCategory(cat)}
-                className={`px-4 py-1.5 rounded-lg border text-label-sm uppercase tracking-wider transition-all ${
-                  category === cat
-                    ? 'bg-primary text-background border-primary'
-                    : 'bg-surface-container border-outline-variant text-secondary hover:border-primary hover:text-primary'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {others.map((post) => <BlogCard key={post.slug} post={post} />)}
           </div>
-        </div>
-      </section>
-
-      {/* Posts grid */}
-      <section className="w-full py-12">
-        <div className="max-w-7xl mx-auto px-margin-mobile lg:px-margin">
-          {filtered.length === 0 ? (
-            <p className="text-body-md text-secondary">No hay artículos en esta categoría.</p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filtered.map((post) => (
-                <BlogCard key={post.slug} post={post} />
-              ))}
-            </div>
-          )}
         </div>
       </section>
     </div>
