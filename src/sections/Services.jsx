@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { services = [] } from '../data/services.js'; // Fallback
+import { services } from '../data/services.js'; // ✅ Import normal
 
 export default function Services() {
   return (
@@ -10,7 +10,8 @@ export default function Services() {
           <h2 className="font-display text-2xl lg:text-3xl text-primary uppercase font-bold">Nuestros Servicios</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services?.map((service) => (
+          {/* ✅ Fallback acá, en el map */}
+          {(services || []).map((service) => (
             <div key={service.id} className={`flex flex-col justify-between p-8 rounded-xl border ${service.featured ? 'bg-surface-container-high border-2 border-primary/60 shadow-2xl relative' : 'bg-surface-container border-outline-variant'} hover:border-primary transition-all`}>
               {service.featured && service.tag && (
                 <div className="absolute -top-3 right-6 bg-primary text-background font-label-sm px-3 py-1 rounded-full uppercase tracking-wider font-extrabold shadow-md">
