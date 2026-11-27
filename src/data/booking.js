@@ -1,77 +1,123 @@
-// Booking-specific data
-
-// Services available in the booking form
-export { services as bookingServices } from './services.js';
-
-// Barbers mapped for booking (uses team data)
-export const bookingBarbers = [
-  { id: 'matias', name: 'Matías R.', rating: 'Director', image: null },
-  { id: 'lucas', name: 'Lucas F.', rating: 'Senior', image: null },
-  { id: 'ezequiel', name: 'Ezequiel T.', rating: 'Grooming', image: null },
-  { id: 'nicolas', name: 'Nicolás P.', rating: 'Barber', image: null },
-  { id: 'cualquiera', name: 'Sin preferencia', rating: 'Flexible', image: null, noAvatar: true },
+export const bookingServices = [
+  {
+    id: 'corte-pelo',
+    name: 'Corte de Pelo',
+    duration: '30–45 min',
+    price: 24000,
+    description: 'Corte a máquina y tijera adaptado a estilos clásicos y modernos. Incluye lavado y peinado.',
+    tag: 'MÁS ELEGIDO',
+    featured: true,
+  },
+  {
+    id: 'corte-barba',
+    name: 'Corte de Pelo + Barba',
+    duration: '1 h',
+    price: 34000,
+    description: 'Corte preciso + perfilado de barba con navaja, espuma y toalla caliente. La experiencia completa.',
+    tag: 'COMBO',
+  },
+  {
+    id: 'limpieza-dermapen',
+    name: 'Limpieza Facial + Dermapen',
+    duration: '50 min',
+    price: 22000,
+    description: 'Limpieza profunda con extracción + micropunción con dermapen para renovación celular.',
+    tag: 'DERMO',
+  },
+  {
+    id: 'perfilado-cejas',
+    name: 'Perfilado de Cejas',
+    duration: '15 min',
+    price: 15000,
+    description: 'Diseño y perfilado de cejas adaptado a la morfología facial.',
+    tag: 'EXPRESS',
+  },
 ];
 
-// Next 6 available days (Mon–Sat)
-function generateDates() {
-  const result = [];
-  const today = new Date();
-  let count = 0;
-  let d = new Date(today);
-  while (result.length < 6) {
-    d = new Date(today);
-    d.setDate(today.getDate() + count);
-    const dow = d.getDay(); // 0=sun
-    if (dow !== 0) { // skip Sundays
-      const day = d.toLocaleDateString('es-AR', { weekday: 'short' }).toUpperCase().replace('.', '');
-      const date = d.getDate().toString();
-      result.push({
-        date,
-        day,
-        available: count > 0, // today blocked as example
-        slots: count === 0 ? 'Sin turnos' : count === 1 ? '2 turnos' : `${7 - count} turnos`,
-      });
-    }
-    count++;
-  }
-  return result;
-}
+export const bookingAddons = [
+  {
+    id: 'wash',
+    name: 'Lavado Crioterapéutico',
+    detail: 'Agua termal helada + mentol',
+    price: 5000,
+    defaultChecked: true,
+  },
+  {
+    id: 'eyes',
+    name: 'Parches de Ojeras de Plata',
+    detail: 'Descongestión con cafeína pura',
+    price: 6500,
+  },
+];
 
-export const bookingDates = generateDates();
+export const bookingBarbers = [
+  {
+    id: 'valentin',
+    name: 'Valentin',
+    role: 'Cortes & Fade',
+    rating: '5.0',
+    availability: 'Turnos disponibles',
+    image: '/images/team/valentin.jpg',
+  },
+  {
+    id: 'luciano',
+    name: 'Luciano',
+    role: 'Barba & Navaja',
+    rating: '5.0',
+    availability: 'Turnos disponibles',
+    image: '/images/team/luciano.jpg',
+  },
+  {
+    id: 'nico',
+    name: 'Nico',
+    role: 'Estilo & Actitud',
+    rating: '5.0',
+    availability: 'Turnos disponibles',
+    image: '/images/team/nico.jpg',
+  },
+  {
+    id: 'any',
+    name: 'Sin Preferencia',
+    role: 'Asignación inmediata de alta calidad',
+    rating: 'ÁGIL',
+    availability: 'Mayor amplitud de horarios',
+    noAvatar: true,
+  },
+];
+
+export const bookingDates = [
+  { day: 'MAR', date: '18', slots: '4 cupos', available: true },
+  { day: 'MIÉ', date: '19', slots: '2 cupos', available: true },
+  { day: 'JUE', date: '20', slots: 'Seleccionado', available: true, selected: true },
+  { day: 'VIE', date: '21', slots: '3 cupos', available: true },
+  { day: 'SÁB', date: '22', slots: '1 cupo', available: true, urgent: true },
+  { day: 'DOM', date: '23', slots: 'Cerrado', available: false },
+];
 
 export const bookingMorningSlots = [
-  { time: '09:00', available: true },
-  { time: '09:45', available: true },
-  { time: '10:30', available: false },
-  { time: '11:15', available: true },
-  { time: '12:00', available: true },
+  { time: '10:00', available: true },
+  { time: '10:45', available: true },
+  { time: '11:30', available: false },
+  { time: '12:15', available: true },
 ];
 
 export const bookingAfternoonSlots = [
-  { time: '14:00', available: true },
-  { time: '14:45', available: false },
-  { time: '15:30', available: true },
-  { time: '16:15', available: true },
-  { time: '17:00', available: true },
-  { time: '17:45', available: false },
-  { time: '18:30', available: true },
-  { time: '19:15', available: true },
+  { time: '15:00', available: true },
+  { time: '15:45', available: true },
+  { time: '16:30', available: true, selected: true },
+  { time: '17:15', available: true },
+  { time: '18:00', available: true, urgent: true },
 ];
 
 export const bookingDrinks = [
-  'Agua mineral',
-  'Café espresso',
-  'Café con leche',
-  'Mate',
-  'Cerveza artesanal (Quilmes IPA)',
-  'Jugo de naranja',
-  'Prefiero no tomar',
+  'Espresso Doble (Grano Colombia de Especialidad)',
+  'Scotch Single Malt (12 años)',
+  'Agua mineral San Pellegrino con limón',
+  'Cerveza Artesanal IPA Local bien fría',
+  'Sin cortesía, solo agua fresca',
 ];
 
 export const bookingPolicies = [
-  'Cancelaciones con más de 2 hs de anticipación sin cargo.',
-  'No-show reiterado puede resultar en restricción de turnos.',
-  'Pago presencial al finalizar. Sin seña online.',
-  'Llegadas con +10 min pueden ser reasignadas.',
+  'Cancelación libre: reprogramá o cancelá sin costo hasta 3 horas antes desde el link de WhatsApp.',
+  'Atelier Libre de Ruido: capacidad acotada a 3 clientes simultáneos para preservar la privacidad.',
 ];
-
