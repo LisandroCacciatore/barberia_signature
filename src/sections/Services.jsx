@@ -20,7 +20,7 @@ export default function Services() {
               <div>
                 <div className="flex justify-between items-start gap-2 mb-3">
                   <span className="text-label-sm px-2.5 py-1 rounded bg-background border border-outline-variant text-primary font-semibold uppercase">{service.duration}</span>
-                  {/* ✅ FIX: Validación del precio nulo */}
+                  {/* ✅ Validación del precio */}
                   <span className="font-display text-lg text-primary font-bold">
                     {service.price ? `ARS ${service.price.toLocaleString('es-AR')}` : 'Consultar'}
                   </span>
