@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import Seo from '../components/Seo.jsx';
 import BlogCard from '../components/BlogCard.jsx';
-import { blogCategories, getPostsByCategory, getFeaturedPost } from '../data/blog.js';
+import { blogCategories = [], getPostsByCategory, getFeaturedPost } from '../data/blog.js';
 import { formatDate } from '../utils/formatDate.js';
 
 export default function BlogIndex() {
@@ -19,7 +19,7 @@ export default function BlogIndex() {
   }, [location.hash]);
 
   const posts = useMemo(() => {
-    const filtered = getPostsByCategory(activeCategory);
+    const filtered = getPostsByCategory(activeCategory) || [];
     return [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date));
   }, [activeCategory]);
 
@@ -42,7 +42,7 @@ export default function BlogIndex() {
           </div>
 
           <div className="mt-8 flex items-center gap-2 overflow-x-auto pb-2">
-            {blogCategories.map((cat) => (
+            {blogCategories?.map((cat) => (
               <button
                 key={cat.id}
                 type="button"
@@ -86,7 +86,7 @@ export default function BlogIndex() {
       <section className="w-full py-12 bg-background">
         <div className="max-w-7xl mx-auto px-margin-mobile lg:px-margin">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {others.map((post) => <BlogCard key={post.slug} post={post} />)}
+            {others?.map((post) => <BlogCard key={post.slug} post={post} />)}
           </div>
         </div>
       </section>
