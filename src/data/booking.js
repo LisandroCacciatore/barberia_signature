@@ -1,5 +1,3 @@
-const base = import.meta.env.BASE_URL;
-
 export const bookingServices = [
   {
     id: 'corte-pelo',
@@ -51,6 +49,8 @@ export const bookingAddons = [
     price: 6500,
   },
 ];
+
+const base = import.meta.env.BASE_URL;
 
 export const bookingBarbers = [
   {
