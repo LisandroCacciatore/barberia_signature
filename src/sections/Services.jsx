@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { services } from '../data/services.js'; // ✅ Import normal
+import { services } from '../data/services.js';
 
 export default function Services() {
   return (
@@ -10,8 +10,7 @@ export default function Services() {
           <h2 className="font-display text-2xl lg:text-3xl text-primary uppercase font-bold">Nuestros Servicios</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* ✅ Fallback acá, en el map */}
-          {(services || []).map((service) => (
+          {services?.map((service) => (
             <div key={service.id} className={`flex flex-col justify-between p-8 rounded-xl border ${service.featured ? 'bg-surface-container-high border-2 border-primary/60 shadow-2xl relative' : 'bg-surface-container border-outline-variant'} hover:border-primary transition-all`}>
               {service.featured && service.tag && (
                 <div className="absolute -top-3 right-6 bg-primary text-background font-label-sm px-3 py-1 rounded-full uppercase tracking-wider font-extrabold shadow-md">
@@ -21,7 +20,10 @@ export default function Services() {
               <div>
                 <div className="flex justify-between items-start gap-2 mb-3">
                   <span className="text-label-sm px-2.5 py-1 rounded bg-background border border-outline-variant text-primary font-semibold uppercase">{service.duration}</span>
-                  <span className="font-display text-lg text-primary font-bold">{service.price ? `ARS ${service.price.toLocaleString('es-AR')}` : 'Consultar'}</span>
+                  {/* ✅ FIX: Validación del precio nulo */}
+                  <span className="font-display text-lg text-primary font-bold">
+                    {service.price ? `ARS ${service.price.toLocaleString('es-AR')}` : 'Consultar'}
+                  </span>
                 </div>
                 <h3 className="font-display text-lg text-primary uppercase font-semibold mb-2">{service.title}</h3>
                 <p className="text-body-sm text-secondary leading-relaxed mb-4">{service.description}</p>

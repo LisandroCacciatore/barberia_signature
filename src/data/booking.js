@@ -1,3 +1,5 @@
+const base = import.meta.env.BASE_URL;
+
 export const bookingServices = [
   {
     id: 'corte-pelo',
@@ -57,23 +59,23 @@ export const bookingBarbers = [
     role: 'Cortes & Fade',
     rating: '5.0',
     availability: 'Turnos disponibles',
-    image: '/images/team/valentin.jpg',
+    image: `${base}images/team/valentin.jpeg`,
   },
   {
-    id: 'luciano',
-    name: 'Luciano',
+    id: 'maximiliano',
+    name: 'Maximiliano',
     role: 'Barba & Navaja',
     rating: '5.0',
     availability: 'Turnos disponibles',
-    image: '/images/team/luciano.jpg',
+    image: `${base}images/team/maximiliano.jpeg`,
   },
   {
-    id: 'nico',
-    name: 'Nico',
+    id: 'nicolas',
+    name: 'Nicolas',
     role: 'Estilo & Actitud',
     rating: '5.0',
     availability: 'Turnos disponibles',
-    image: '/images/team/nico.jpg',
+    image: `${base}images/team/nicolas.jpg`,
   },
   {
     id: 'any',
