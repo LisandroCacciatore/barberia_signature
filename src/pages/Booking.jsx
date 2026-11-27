@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Seo from '../components/Seo.jsx';
 import { useBooking } from '../hooks/useBooking.js';
-import { bookingMorningSlots = [], bookingAfternoonSlots = [], bookingDrinks = [], bookingPolicies = [] } from '../data/booking.js';
+import { bookingMorningSlots, bookingAfternoonSlots, bookingDrinks, bookingPolicies } from '../data/booking.js';
 import { buildLeadPayload, submitLead, isValidPhone } from '../utils/utm.js';
 
 export default function Booking() {
