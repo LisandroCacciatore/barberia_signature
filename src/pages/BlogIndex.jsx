@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import Seo from '../components/Seo.jsx';
 import BlogCard from '../components/BlogCard.jsx';
-import { blogCategories = [], getPostsByCategory, getFeaturedPost } from '../data/blog.js';
+import { blogCategories, getPostsByCategory, getFeaturedPost } from '../data/blog.js';
 import { formatDate } from '../utils/formatDate.js';
 
 export default function BlogIndex() {
