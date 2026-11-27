@@ -93,12 +93,23 @@ export default function BlogPost() {
         </div>
       </section>
 
-      {/* Cover placeholder */}
-      <div className="max-w-3xl mx-auto px-margin-mobile lg:px-margin">
-        <div className="h-56 bg-surface-container border border-outline-variant rounded-xl my-8 flex items-center justify-center">
-          <span className="material-symbols-outlined text-secondary text-[48px] opacity-30">article</span>
+      {/* Hero image */}
+      {post.image && (
+        <div className="max-w-3xl mx-auto px-margin-mobile lg:px-margin mb-8">
+          <div className="w-full aspect-[16/9] rounded-xl overflow-hidden border border-outline-variant bg-surface-container">
+            <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Cover placeholder (fallback) */}
+      {!post.image && (
+        <div className="max-w-3xl mx-auto px-margin-mobile lg:px-margin">
+          <div className="h-56 bg-surface-container border border-outline-variant rounded-xl my-8 flex items-center justify-center">
+            <span className="material-symbols-outlined text-secondary text-[48px] opacity-30">article</span>
+          </div>
+        </div>
+      )}
 
       {/* Content */}
       <article className="max-w-3xl mx-auto px-margin-mobile lg:px-margin pb-16">
