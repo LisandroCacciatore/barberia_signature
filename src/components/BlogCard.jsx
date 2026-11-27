@@ -18,9 +18,6 @@ export default function BlogCard({ post }) {
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-surface-container-low via-transparent to-transparent pointer-events-none" />
-        <div className="absolute top-3 left-3 px-2.5 py-1 bg-background/85 backdrop-blur-md rounded text-label-sm text-primary uppercase tracking-wider">
-          {post.categoryLabel}
-        </div>
         <div className="absolute bottom-3 right-3 px-2 py-0.5 bg-surface-container-high/90 backdrop-blur-md rounded text-label-sm text-secondary flex items-center gap-1">
           <span className="material-symbols-outlined text-[13px]">schedule</span>
           {post.readingTime}
