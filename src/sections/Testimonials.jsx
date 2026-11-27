@@ -1,35 +1,23 @@
-import { testimonials } from '../data/testimonials.js';
+import { testimonials } from '../data/testimonials.js'; // ✅ Import normal
 
 export default function Testimonials() {
   return (
-    <section className="w-full py-20 lg:py-28 border-b border-outline-variant">
+    <section className="w-full bg-surface-container-lowest py-16 border-b border-outline-variant">
       <div className="max-w-7xl mx-auto px-margin-mobile lg:px-margin">
-        <div className="mb-12">
-          <span className="text-label-sm text-secondary uppercase tracking-[0.2em]">
-            Lo que dicen
-          </span>
-          <h2 className="font-display text-3xl lg:text-4xl text-primary uppercase font-light mt-2">
-            Reseñas
-          </h2>
+        <div className="flex flex-col items-center text-center max-w-xl mx-auto mb-12">
+          <h2 className="font-display text-2xl lg:text-3xl text-primary uppercase font-bold">5.0 Estrellas Impecables</h2>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {testimonials.map((t) => (
-            <div
-              key={t.id}
-              className="bg-surface-container border border-outline-variant rounded-xl p-6"
-            >
-              <div className="flex items-center gap-1 mb-4">
-                {Array.from({ length: t.stars }).map((_, i) => (
-                  <span key={i} className="material-symbols-outlined text-primary text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                    star
-                  </span>
-                ))}
-              </div>
-              <p className="text-body-md text-secondary mb-4 italic">"{t.text}"</p>
-              <div className="border-t border-outline-variant pt-3">
-                <p className="font-display text-sm text-primary font-bold">{t.name}</p>
-                <p className="text-label-sm text-secondary">{t.role}</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* ✅ Fallback acá, en el map */}
+          {(testimonials || []).map((t) => (
+            <div key={t.name} className="flex flex-col justify-between p-8 rounded-xl bg-surface-container border border-outline-variant shadow-lg">
+              <p className="text-body-md text-secondary leading-relaxed italic mb-6">"{t.quote}"</p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center font-bold text-primary font-display">{t.initials}</div>
+                <div>
+                  <p className="font-display text-sm text-primary font-semibold">{t.name}</p>
+                  <p className="text-body-sm text-primary">{t.detail}</p>
+                </div>
               </div>
             </div>
           ))}
@@ -38,4 +26,3 @@ export default function Testimonials() {
     </section>
   );
 }
-
