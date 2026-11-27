@@ -12,7 +12,7 @@ export default function BlogIndex() {
 
   useEffect(() => {
     const hash = location.hash.replace('#', '').toLowerCase();
-    const validCategories = blogCategories.map((c) => c.id);
+    const validCategories = blogCategories?.map((c) => c.id) || [];
     if (hash && validCategories.includes(hash)) {
       setActiveCategory(hash);
     }
