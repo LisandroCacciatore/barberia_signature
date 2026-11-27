@@ -1,4 +1,4 @@
-import { gallery = [] } from '../data/gallery.js';
+import { gallery } from '../data/gallery.js'; // ✅ Import normal
 
 export default function Gallery() {
   return (
@@ -11,7 +11,8 @@ export default function Gallery() {
           </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {gallery?.map((img, i) => (
+          {/* ✅ Fallback acá, en el map */}
+          {(gallery || []).map((img, i) => (
             <div key={i} className={`rounded-xl overflow-hidden shadow-lg border border-outline-variant bg-surface-container aspect-square ${img.tall ? 'md:row-span-2 md:aspect-[4/5]' : ''}`}>
               <img src={img.url} alt={img.alt} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
             </div>
